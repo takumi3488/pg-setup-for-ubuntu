@@ -7,8 +7,8 @@ ssh -i $SSH_KEY $HOST "sudo apt update && \
     sudo systemctl enable postgresql"
 
 # Create tmp user
-ssh -i $SSH_KEY $HOST "sudo -u postgres psql -c \"CREATE USER IF NOT EXISTS tmp WITH PASSWORD 'tmp'\" && \
-    sudo -u postgres psql -c \"CREATE DATABASE IF NOT EXISTS tmp WITH OWNER tmp\" && \
+ssh -i $SSH_KEY $HOST "sudo -u postgres psql -c \"CREATE USER tmp WITH PASSWORD 'tmp'\" && \
+    sudo -u postgres psql -c \"CREATE DATABASE tmp WITH OWNER tmp\" && \
     sudo -u postgres psql -c \"ALTER USER tmp WITH SUPERUSER\""
 
 # Allow remote access to postgresql
