@@ -1,0 +1,27 @@
+version: "3"
+
+tasks:
+  default:
+    dotenv:
+      - .env
+    cmds:
+      - ./setup.sh
+
+  test:
+    dotenv:
+      - .env.test
+    cmds:
+      - terraform destroy -auto-approve
+      - terraform apply -auto-approve
+      - |
+        IP_ADDRESS=$(cat terraform.tfstate | jq '.resources' \
+        | jq '.[] | select(.type == "aws_instance")' \
+        | jq -r '.instances[0].attributes.public_ip') && \
+        export HOST="ubuntu@${IP_ADDRESS}" && \
+        sleep 30 && \
+        ./setup.sh
+      - task: delete
+
+  delete:
+    cmds:
+      - terraform destroy -auto-approve
